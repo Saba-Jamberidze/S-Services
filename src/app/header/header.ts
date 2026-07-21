@@ -15,10 +15,7 @@ export class Header {
   ) {}
 
   onLogoutClick() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-    });
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

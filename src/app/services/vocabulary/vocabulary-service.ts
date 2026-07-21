@@ -29,22 +29,18 @@ export class VocabularyService {
   constructor(private http: HttpClient) {}
 
   getWords(): Observable<Word[]> {
-    return this.http.get<Word[]>(this.apiBase, { withCredentials: true });
+    return this.http.get<Word[]>(this.apiBase);
   }
 
   addWord(dto: CreateWordDto): Observable<Word> {
-    return this.http.post<Word>(this.apiBase, dto, { withCredentials: true });
+    return this.http.post<Word>(this.apiBase, dto);
   }
 
   setLearned(id: number, isLearned: boolean): Observable<void> {
-    return this.http.patch<void>(
-      `${this.apiBase}/${id}/learned`,
-      { isLearned },
-      { withCredentials: true }
-    );
+    return this.http.patch<void>(`${this.apiBase}/${id}/learned`, { isLearned });
   }
 
   deleteWord(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiBase}/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`${this.apiBase}/${id}`);
   }
 }
