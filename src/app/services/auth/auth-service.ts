@@ -19,8 +19,10 @@ export class AuthService {
   constructor(private http:HttpClient) {}
 
   login(): void {
-    const returnUrl = encodeURIComponent(window.location.origin)
-    window.location.href = `${this.apiBase}/login?returnUrl=${returnUrl}`;
+  const returnUrl = encodeURIComponent(document.baseURI);
+
+  window.location.href =
+    `${this.apiBase}/login?returnUrl=${returnUrl}`;
   }
 
   me(): Observable<CurrentUser | null> {
