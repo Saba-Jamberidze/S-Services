@@ -1,0 +1,189 @@
+<div class="all">
+  <aside class="filter-aside" [class.is-open]="isFilterOpen">
+    <div class="modal-backdrop" (click)="isFilterOpen = false"></div>
+
+    <div class="aways-on-top Vocabulary-filter">
+      <button class="close-panel" (click)="isFilterOpen = false" aria-label="Close filters">
+        ×
+      </button>
+
+      <div class="filter">
+        <h1>Vocabulary Filter</h1>
+
+        <div class="filter-batons">
+          <button class="indetification">{{ wordfilter }}</button>
+
+          <div class="filter-options">
+            <div class="options">
+              <button class="optionsbtn" (click)="changeFilter('All Words')">
+                All Words
+              </button>
+              <button class="optionsbtn" (click)="changeFilter('Learned')">
+                Learned
+              </button>
+              <button class="optionsbtn" (click)="changeFilter('Not Learned')">
+                Not Learned
+              </button>
+            </div>
+
+            <div class="alphabet">
+              <button
+                class="leters"
+                *ngFor="let letter of alphabet"
+                (click)="changeFilter(letter)"
+              >
+                {{ letter }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-word">
+        <h1>Add Word</h1>
+
+        <form #newWordForm="ngForm" (ngSubmit)="addNewWord()">
+          <label class="ob1" for="word">Word*:</label>
+          <input
+            placeholder="Hi"
+            class="ob2"
+            type="text"
+            [(ngModel)]="newWord.word"
+            name="word"
+            id="word"
+            required
+          >
+
+          <label class="ob3" for="definition">Definition*:</label>
+          <input
+            placeholder="გამარჯობა"
+            class="ob4"
+            type="text"
+            [(ngModel)]="newWord.definition"
+            name="definition"
+            id="definition"
+            required
+          >
+
+          <label class="ob5" for="example">Example:</label>
+          <input
+            placeholder="Hi Saba! How are you?"
+            class="ob6"
+            type="text"
+            [(ngModel)]="newWord.example"
+            name="example"
+            id="example"
+          >
+
+          <label class="ob7" for="additionalInfo">Additional Info:</label>
+          <textarea
+            placeholder="Hi არის შემოკლებული ვერსია Hello - ს"
+            class="ob8"
+            name="additionalInfo"
+            id="additionalInfo"
+            [(ngModel)]="newWord.additionalInfo"
+          ></textarea>
+
+          <button class="ob9" type="submit">Add Word</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <section class="main">
+    <div class="main-holder">
+      <div class="titlee">
+        <h1>Vocabulary</h1>
+
+        <div class="title-actions">
+          <button class="toolbar-button search-trigger" (click)="openSearch()">
+            Search word
+          </button>
+
+          <button class="toolbar-button filter-trigger" (click)="openFilters()">
+            Filters
+          </button>
+        </div>
+      </div>
+
+      <div class="titlee-space"></div>
+
+      <div class="word-list" *ngFor="let letter of uniqueLetters">
+        <h1 class="word-title">{{ letter }}</h1>
+
+        <div class="words">
+          <div class="word-item" *ngFor="let w of wordsByLetter(letter)">
+            <span class="word">{{ w.word }}</span>
+            <span class="definition">{{ w.definition }}</span>
+            <span class="example">{{ w.example }}</span>
+            <span class="additionalInfo">{{ w.additionalInfo }}</span>
+
+            <button
+              class="isLearned"
+              [class.is-true]="w.isLearned"
+              [class.is-false]="!w.isLearned"
+              (click)="toggleLearned(w)"
+            >
+              @if (w.isLearned) {
+                Learned
+              } @else {
+                Not learned
+              }
+            </button>
+
+            <button class="other" (click)="removeWord(w)">...</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="search-aside" [class.is-open]="isSearchOpen">
+    <div class="modal-backdrop" (click)="isSearchOpen = false"></div>
+
+    <div class="aways-on-top search-item">
+      <button class="close-panel" (click)="isSearchOpen = false" aria-label="Close search">
+        ×
+      </button>
+
+      <div class="search-input-holder">
+        <label for="search">Search:</label>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        >
+      </div>
+
+      <h1 class="word-title">Search Results</h1>
+
+      <div class="word-list search-list">
+        <div class="words">
+          <div class="word-item" *ngFor="let w of searchResults">
+            <span class="word">{{ w.word }}</span>
+            <span class="definition">{{ w.definition }}</span>
+            <span class="example">{{ w.example }}</span>
+            <span class="additionalInfo">{{ w.additionalInfo }}</span>
+
+            <button
+              class="isLearned"
+              [class.is-true]="w.isLearned"
+              [class.is-false]="!w.isLearned"
+              (click)="toggleLearned(w)"
+            >
+              @if (w.isLearned) {
+                Learned
+              } @else {
+                Not learned
+              }
+            </button>
+
+            <button class="other" (click)="removeWord(w)">...</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,18 @@
+:host {
+  --p-color: #000cf0;
+  --white: #ffffff;
+  --back-color: #d7d7d7;
+}
+
+
+.app-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .app-div-center{
+    max-width: 1500px;
+  }
+}
