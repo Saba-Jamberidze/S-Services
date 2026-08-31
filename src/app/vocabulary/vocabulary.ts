@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VocabularyService, Word } from '../services/vocabulary/vocabulary-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vocabulary',
@@ -21,8 +22,10 @@ export class Vocabulary implements OnInit {
   searchTerm = '';
   searchResults: Word[] = [];
 
+  isAsideOpen = false;
   isSearchOpen = false;
   isFilterOpen = false;
+  isAddWordOpen = false;
 
   private emptyWord = () => ({
     word: '',
@@ -35,7 +38,8 @@ export class Vocabulary implements OnInit {
 
   constructor(
     private vocabularyService: VocabularyService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +79,7 @@ export class Vocabulary implements OnInit {
   changeFilter(filter: string): void {
     this.wordfilter = filter;
     this.isFilterOpen = false;
+    this.isAsideOpen = false;
     this.cdr.markForCheck();
   }
 
@@ -177,5 +182,10 @@ export class Vocabulary implements OnInit {
         w.word.toLowerCase().includes(term) ||
         w.definition.toLowerCase().includes(term)
     );
+  }
+
+  
+  navigateToWordPage(word: any) {
+    this.router.navigate(['/word', word.id]);
   }
 }

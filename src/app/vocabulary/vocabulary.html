@@ -1,13 +1,13 @@
 <div class="all">
-  <aside class="filter-aside" [class.is-open]="isFilterOpen">
-    <div class="modal-backdrop" (click)="isFilterOpen = false"></div>
+  <aside class="filter-aside" [class.is-open]="isAsideOpen">
+    <div class="modal-backdrop" (click)="isAsideOpen = false"></div>
 
     <div class="aways-on-top Vocabulary-filter">
-      <button class="close-panel" (click)="isFilterOpen = false" aria-label="Close filters">
+      <button class="close-panel" (click)="isAsideOpen = false; isFilterOpen = false; isAddWordOpen = false" aria-label="Close filters">
         ×
       </button>
 
-      <div class="filter">
+      <div class="filter" [class.is-open]="isFilterOpen">
         <h1>Vocabulary Filter</h1>
 
         <div class="filter-batons">
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div class="add-word">
+      <div class="add-word" [class.is-open]="isAddWordOpen">
         <h1>Add Word</h1>
 
         <form #newWordForm="ngForm" (ngSubmit)="addNewWord()">
@@ -91,47 +91,48 @@
   </aside>
 
   <section class="main">
+    <div class="mobileNavigation">
+      <button class="filter" (click)="isFilterOpen = !isFilterOpen; isAsideOpen = !isAsideOpen">Filter</button>
+      <button class="serch" (click)="isSearchOpen = !isSearchOpen">Search</button>
+      <button class="add-word" (click)="isAddWordOpen = !isAddWordOpen; isAsideOpen = !isAsideOpen">Add Word</button>
+    </div>
+
     <div class="main-holder">
-      <div class="titlee">
-        <h1>Vocabulary</h1>
-
-        <div class="title-actions">
-          <button class="toolbar-button search-trigger" (click)="openSearch()">
-            Search word
-          </button>
-
-          <button class="toolbar-button filter-trigger" (click)="openFilters()">
-            Filters
-          </button>
-        </div>
-      </div>
-
-      <div class="titlee-space"></div>
-
       <div class="word-list" *ngFor="let letter of uniqueLetters">
         <h1 class="word-title">{{ letter }}</h1>
 
         <div class="words">
           <div class="word-item" *ngFor="let w of wordsByLetter(letter)">
-            <span class="word">{{ w.word }}</span>
-            <span class="definition">{{ w.definition }}</span>
-            <span class="example">{{ w.example }}</span>
-            <span class="additionalInfo">{{ w.additionalInfo }}</span>
-
-            <button
-              class="isLearned"
-              [class.is-true]="w.isLearned"
-              [class.is-false]="!w.isLearned"
-              (click)="toggleLearned(w)"
-            >
-              @if (w.isLearned) {
-                Learned
+            <span class="example" (click)="navigateToWordPage(w)">
+              @if (w.example) {
+                EX: {{ w.example }}
               } @else {
-                Not learned
+                EX: No example
               }
-            </button>
-
-            <button class="other" (click)="removeWord(w)">...</button>
+            </span>
+            <div class="main" >
+              <span class="word" (click)="navigateToWordPage(w)">{{ w.word }}</span>
+              <span class="definition" (click)="navigateToWordPage(w)">{{ w.definition }}</span>
+              <button
+                class="isLearned"
+                [class.is-true]="w.isLearned"
+                [class.is-false]="!w.isLearned"
+                (click)="toggleLearned(w)"
+              >
+                @if (w.isLearned) {
+                  +
+                } @else {
+                  -
+                }
+              </button>
+            </div>
+            <span class="additionalInfo" (click)="navigateToWordPage(w)">
+              @if (w.additionalInfo) {
+                AI: {{ w.additionalInfo }}
+              } @else {
+                AI: No additional info
+              }
+            </span>
           </div>
         </div>
       </div>
@@ -160,27 +161,24 @@
       <h1 class="word-title">Search Results</h1>
 
       <div class="word-list search-list">
-        <div class="words">
-          <div class="word-item" *ngFor="let w of searchResults">
-            <span class="word">{{ w.word }}</span>
-            <span class="definition">{{ w.definition }}</span>
-            <span class="example">{{ w.example }}</span>
-            <span class="additionalInfo">{{ w.additionalInfo }}</span>
-
-            <button
-              class="isLearned"
-              [class.is-true]="w.isLearned"
-              [class.is-false]="!w.isLearned"
-              (click)="toggleLearned(w)"
-            >
-              @if (w.isLearned) {
-                Learned
-              } @else {
-                Not learned
-              }
-            </button>
-
-            <button class="other" (click)="removeWord(w)">...</button>
+                <div class="words">
+          <div class="word-item" *ngFor="let w of searchResults" style="background-color: white !important; transform: none !important; box-shadow: none !important;">
+            <div class="main">
+              <span class="word" (click)="navigateToWordPage(w)">{{ w.word }}</span>
+              <span class="definition" (click)="navigateToWordPage(w)">{{ w.definition }}</span>
+              <button
+                class="isLearned"
+                [class.is-true]="w.isLearned"
+                [class.is-false]="!w.isLearned"
+                (click)="toggleLearned(w)"
+              >
+                @if (w.isLearned) {
+                  +
+                } @else {
+                  -
+                }
+              </button>
+            </div>
           </div>
         </div>
       </div>

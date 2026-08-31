@@ -32,6 +32,10 @@ export class VocabularyService {
     return this.http.get<Word[]>(this.apiBase);
   }
 
+  getWord(id: number): Observable<Word> {
+    return this.http.get<Word>(`${this.apiBase}/${id}`);
+  }
+
   addWord(dto: CreateWordDto): Observable<Word> {
     return this.http.post<Word>(this.apiBase, dto);
   }

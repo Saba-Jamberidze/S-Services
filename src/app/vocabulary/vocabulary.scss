@@ -194,27 +194,6 @@
     display: flex;
     flex-direction: column;
   }
-
-  .titlee {
-    background-color: var(--p-color);
-    margin-top: 20px;
-    padding: 10px;
-    position: fixed;
-    z-index: 5;
-    width: 500px;
-    box-sizing: border-box;
-    text-align: center;
-    color: var(--white);
-    border-radius: 20px;
-
-    h1 {
-      margin: 0;
-    }
-  }
-
-  .titlee-space {
-    height: 85px;
-  }
 }
 
 .title-actions {
@@ -237,63 +216,141 @@
   width: 500px;
   max-width: 100%;
 
-  .word-item {
-    margin: 10px 0;
-    display: grid;
-    color: var(--p-color);
-    background-color: var(--back-color);
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 1.5fr repeat(2, 1fr);
+.word-item {
+  position: relative;
+  margin: 10px 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  color: var(--p-color);
+  background-color: var(--back-color);
+  gap: 5px;
+  padding: 10px;
+  border-radius: 20px;
+  transform: scale(1);
+  z-index: 1;
+
+  transition:
+    background-color 0.25s ease-in-out,
+    box-shadow 0.25s ease-in-out,
+    transform 0.25s ease-in-out,
+    z-index 0s linear 0.25s; // hover-იდან გამოსვლის შემდეგ იცდის
+
+  .main {
+    display: flex;
     gap: 5px;
-    padding: 10px;
-    border-radius: 20px;
+    width: 100%;
+    position: relative;
 
-    span {
-      background-color: var(--white);
-      padding: 6px;
-      border-radius: 10px;
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
-
-    .word,
-    .definition {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      padding-left: 20px;
-      font-size: 20px;
-    }
-
-    button {
+    .isLearned {
       border: none;
       border-radius: 10px;
+      width: 100px;
       color: var(--white);
-    }
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
 
-    .word { grid-area: 1 / 1 / 2 / 3; }
-    .definition { grid-area: 1 / 3 / 2 / 5; }
-    .example { grid-area: 2 / 1 / 3 / 4; }
-    .additionalInfo { grid-area: 3 / 1 / 4 / 4; }
-    .isLearned { grid-area: 2 / 4 / 3 / 5; }
+      &:hover {
+        transform: scale(1.05);
+      }
 
-    .isLearned.is-true {
-      background-color: rgb(76, 192, 76);
-    }
+      &.is-true {
+        background-color: #22c55e;
+      }
 
-    .isLearned.is-false {
-      background-color: rgb(203, 93, 93);
-    }
+      &.is-false {
+        background-color: #ef4444;
+      }
+}
+    
+  }
 
-    .other {
-      grid-area: 3 / 4 / 4 / 5;
-      color: var(--p-color);
+  span {
+    font-size: 18px;
+    background-color: var(--white);
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+
+
+  }
+
+  .example,
+  .additionalInfo {
+    position: absolute;
+    background-color: var(--p-color);
+    color: var(--white);
+    left: 10px;
+    right: 10px;
+    width: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleY(0);
+    transition:
+      opacity 0.25s ease-in-out,
+      transform 0.3s ease-in-out;
+  }
+
+  .example {
+    bottom: calc(100% + 5px);
+    transform-origin: bottom;
+  }
+
+  .additionalInfo {
+    top: calc(100% + 5px);
+    transform-origin: top;
+  }
+
+
+
+  &:hover {
+    background-color: var(--p-color);
+    filter: drop-shadow(#301934 0px 0px 20px);
+    transform: scale(1.05);
+    z-index: 5;
+
+    // hover-ზე z-index დაუყოვნებლივ უნდა გაიზარდოს
+    transition:
+      background-color 0.25s ease-in-out,
+      filter 0.35s ease-in-out,
+      transform 0.25s ease-in-out,
+      z-index 0s;
+
+    .example,
+    .additionalInfo {
+      opacity: 1;
+      transform: scaleY(1);
+      pointer-events: auto
     }
   }
+}
 }
 
 .search-list {
   width: 300px;
+}
+
+.mobileNavigation{
+  z-index: 10;
+  width: 100%;
+  background-color: var(--p-color);
+  color: var(--white);
+  display: none;
+  justify-content: center;
+  gap: 60px;
+
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 20px;
+  button{
+    background-color: var(--white);
+    color: var(--p-color);
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 5px 10px;
+  }
 }
 
 @media (max-width: 1430px) {
@@ -307,6 +364,18 @@
   .all {
     justify-content: center;
     gap: 20px;
+  }
+
+  .mobileNavigation{
+
+    display: flex;
+
+    .filter{
+      display: none;
+    }
+    .add-word{
+      display: none;
+    }
   }
 
   .all > .search-aside {
@@ -372,23 +441,34 @@
   .all .main {
     width: min(500px, 100%);
     margin: 0 auto;
+    .main-holder{
+      padding-top: 50px;
+    }
+  }
+
+  .mobileNavigation{
+    position: fixed;
+    width: 332px;
+    top: 2;
+    left: calc((100vw - 332px)/2);
+
+    button{
+      font-size: 14px;
+    }
+
+    .filter{
+      display: block;
+    }
+    .serch{
+      display: block;
+    }
+    .add-word{
+      display: block;
+    }
   }
 
   /* Vocabulary header ტელეფონზე/ტაბლეტზე ცენტრში */
-  .all .titlee {
-    position: sticky;
-    top: 10px;
-    z-index: 10;
-    width: 100%;
-    margin: 10px 0 0;
-    padding: 12px 10px;
-    box-sizing: border-box;
-    border-radius: 16px;
 
-    h1 {
-      font-size: 28px;
-    }
-  }
 
   .all .titlee-space {
     height: 12px;
@@ -405,6 +485,12 @@
 
   .all > .filter-aside .aways-on-top {
     display: none;
+    .filter{
+      display: none;
+    }
+    .add-word{
+      display: none;
+    }
   }
 
   .filter-trigger {
@@ -424,15 +510,19 @@
     z-index: 100;
     background: rgba(0, 0, 0, 0.55);
   }
+  .all > .filter-aside.is-open .aways-on-top .filter.is-open,
+  .all > .filter-aside.is-open .aways-on-top .add-word.is-open {
+  display: flex;
+  }
 
   .all > .filter-aside.is-open .aways-on-top {
     display: flex;
     position: fixed;
     z-index: 101;
-    top: 16px;
+    top: 50px;
     left: 50%;
     width: min(500px, calc(100vw - 32px));
-    height: calc(100vh - 32px);
+    height: 400px;
     margin: 0;
     transform: translateX(-50%);
     overflow-y: auto;
